@@ -13,7 +13,7 @@ env:
 
 jobs:
   build:
-    runs-on: [self-hosted, linux, build, label-01]  # EC2 runner에서 실행되게 설정
+    runs-on: [self-hosted, Linux, X64, label-01]  # EC2 runner에서 실행되게 설정
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
