@@ -1,0 +1,39 @@
+name: CI - Podman build & push
+
+on:
+  push:
+    paths:
+      - "Containerfile"
+      - "index.html"
+
+env:
+  REGISTRY: quay.io
+  IMAGE_NAME: 7910trio/sy-bootc-httpd
+
+jobs:
+  build:
+    runs-on: [self-hosted, linux, build]  # EC2 runner에서 실행되게 설정
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set image tag (commit-based)
+        id: vars
+        run: |
+          SHORT_SHA=$(echo "${GITHUB_SHA}" | cut -c1-7)
+          echo "TAG=${SHORT_SHA}" >> $GITHUB_ENV
+          echo "FULL_IMAGE=${REGISTRY}/${IMAGE_NAME}:${SHORT_SHA}" >> $GITHUB_ENV
+
+      - name: Login to Quay.io
+        run: |
+          podman login $REGISTRY \
+            -u "${{ secrets.QUAY_USERNAME }}" \
+            -p "${{ secrets.QUAY_PASSWORD }}"
+
+      - name: Build container image
+        run: |
+          podman build -f ./Containerfile -t "$FULL_IMAGE" .
+
+      - name: Push image (commit-tag)
+        run: |
+          podman push "$FULL_IMAGE"
