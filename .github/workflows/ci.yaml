@@ -9,7 +9,7 @@ on:
 
 env:
   REGISTRY: quay.io
-  IMAGE_NAME: 7910trio/sy-bootc-httpd
+  IMAGE_NAME: 7910trio/sy-bootc-httpd 
 
 jobs:
   build:
