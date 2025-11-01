@@ -44,6 +44,10 @@ jobs:
       - name: Push image (commit-tag)
         run: |
           podman push "$FULL_IMAGE"
+      
+      - name: Pull container image locally for BootC
+        run: |
+          sudo podman pull "$FULL_IMAGE"
 
       - name: Build AMI using BootC Image Builder
         run: |
